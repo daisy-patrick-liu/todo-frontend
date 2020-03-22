@@ -1,0 +1,20 @@
+#root {
+    margin: auto;
+    width: 80%;
+}
+
+span.state {
+    margin-left: 20px;
+}
+
+#listPart {
+    margin-top: 80px;
+}
+
+.completedRow {
+    background-color: lavender;
+}
+
+.normalRow {
+    background-color: ivory;
+}
