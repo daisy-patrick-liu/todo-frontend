@@ -2,11 +2,13 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 module.exports = {
     entry: './src/index.js',
     output: {
         filename: 'bundle.[hash].js',
+        chunkFilename: '[name].bundle.js',
         publicPath:"/",
         path: path.join(__dirname, 'dist/')
     },
@@ -22,8 +24,8 @@ module.exports = {
             },
             {
                 test: /\.js[x]?$/,
+                exclude: /node_modules/,
                 use: 'babel-loader',
-                exclude: /node_modules/
             },
             {//antd样式处理
                 test:/\.css$/,

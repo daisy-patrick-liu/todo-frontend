@@ -2,7 +2,6 @@ import React from 'react'
 import {TODOS_TYPE,updateTodoAction, getAllTodos} from '../redux/actions'
 import { connect } from 'react-redux'
 import {Table, Button, Popconfirm} from 'antd'
-import {CheckCircleTwoTone} from '@ant-design/icons'
 
 class TodoList extends React.Component {
     constructor(props) {
@@ -10,7 +9,14 @@ class TodoList extends React.Component {
         this.columns = [
             {
                 title: 'todo item',
-                dataIndex: 'content'
+                dataIndex: 'content',
+                render: (text, record, index) => {
+                    if(record.status == 2) {
+                        return <span className="completedText">{record.content}</span>
+                    } else {
+                        return <span>{record.content}</span>
+                    }
+                }
             },
             {
                 title: 'status',
@@ -18,12 +24,7 @@ class TodoList extends React.Component {
                     if(record.status == 1) {
                         return 'incomplete'
                     } else if(record.status == 2) {
-                        return (
-                            <>
-                                <CheckCircleTwoTone />
-                                &nbsp;&nbsp;completed
-                            </>
-                        )
+                        return <span className="completedText">completed</span>
                     } else if(record.status == 3) {
                         return 'deleted'
                     }

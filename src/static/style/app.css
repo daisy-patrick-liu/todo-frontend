@@ -18,3 +18,7 @@ span.state {
 .normalRow {
     background-color: ivory;
 }
+
+.completedText{
+    color: aqua;
+}
