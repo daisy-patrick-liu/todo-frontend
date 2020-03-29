@@ -1,9 +1,8 @@
 const merge = require('webpack-merge')
 const baseConfig = require('./webpack.base.config')
-const { CleanWepackPlugin } = require('clean-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const DashboardPlugin = require("webpack-dashboard/plugin")
 const webpack = require('webpack')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = merge(baseConfig, {
     plugins: [
@@ -14,7 +13,10 @@ module.exports = merge(baseConfig, {
         }),
         // webpack-dev-server enhancement plugins
         new DashboardPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin()
     ],
+    optimization: {
+        minimizer: [new TerserPlugin({ /* additional options here */ })],
+    },
     mode: 'production'
 })

@@ -1,29 +1,12 @@
 import React from 'react'
 import {TODOS_TYPE,updateTodoAction, getAllTodos} from '../redux/actions'
 import { connect } from 'react-redux'
-import {Table} from 'antd'
+import {Table, Button, Popconfirm} from 'antd'
 import {CheckCircleTwoTone} from '@ant-design/icons'
-
-const getFilteredTodos = (todos, filter) => {
-    switch (filter) {
-        case TODOS_TYPE.SHOW_ALL:
-            return todos
-        case TODOS_TYPE.SHOW_COMPLETE:
-            return todos.filter(item => item.status == 2)
-        case TODOS_TYPE.SHOW_ACTIVE:
-            return todos.filter(item => item.status == 1)
-        default:
-            throw new Error('invalid filter')
-    }
-}
 
 class TodoList extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            filter: TODOS_TYPE.SHOW_ALL
-        }
-        this.onSelect = this.onSelect.bind(this)
         this.columns = [
             {
                 title: 'todo item',
@@ -33,30 +16,26 @@ class TodoList extends React.Component {
                 title: 'status',
                 render: (text, record, index) => {
                     if(record.status == 1) {
-                        return '未完成'
+                        return 'incomplete'
                     } else if(record.status == 2) {
                         return (
                             <>
                                 <CheckCircleTwoTone />
-                                &nbsp;&nbsp;已完成
+                                &nbsp;&nbsp;completed
                             </>
                         )
                     } else if(record.status == 3) {
-                        return '已删除'
+                        return 'deleted'
                     }
                 },
                 filters: [
                     {
-                        text: '未完成',
+                        text: 'incomplete',
                         value: 1
                     },
                     {
-                        text: '已完成',
+                        text: 'complete',
                         value: 2
-                    },
-                    {
-                        text: '已删除',
-                        value: 3
                     }
                 ],
                 onFilter: (value, record) => record.status == value
@@ -64,17 +43,22 @@ class TodoList extends React.Component {
             {
                 title: 'operation',
                 render: (text, record, index) => {
+                    const title = 'Are you sure to delete this item?'
                     if(record.status == 1) {
                         // ‘完成’ & ‘删除’
                         return (
                             <>
-                                <button onClick={() => this.props.updateTodo({"id":record.id, status:2})}>完成</button>
-                                <button onClick={() => this.props.updateTodo({"id":record.id, status:3})}>删除</button>
+                                <Button onClick={() => this.props.updateTodo({"id":record.id, status:2})}>complete</Button>
+                                <Popconfirm placement="topLeft" onConfirm={() => this.props.updateTodo({"id":record.id, status:3})} title={title} okText="Yes" cancelText="No">
+                                    <Button style={{marginLeft: '12px'}}>delete</Button>
+                                </Popconfirm>
                             </>
                         )
                     } else if(record.status == 2) {
                         // ‘删除’
-                        return <button onClick={() => this.props.updateTodo({"id":record.id, status:3})}>删除</button>
+                        return <Popconfirm placement="topLeft" onConfirm={() => this.props.updateTodo({"id":record.id, status:3})} title={title} okText="Yes" cancelText="No">
+                            <Button>delete</Button>
+                        </Popconfirm>
                     } else {
                         return null
                     }
@@ -87,55 +71,12 @@ class TodoList extends React.Component {
         this.props.getTodos()
     }
 
-    onSelect(e) {
-        this.setState({
-            filter: e.target.value
-        })
-    }
-
     render() {
-        let itemsToShow = getFilteredTodos(this.props.todos, this.state.filter)
+        let itemsToShow = this.props.todos.filter(item => item.status !== 3)
 
         return (
             <div id="listPart">
-                {/* <label>
-                   <input
-                       type="radio"
-                       value={TODOS_TYPE.SHOW_ALL}
-                       checked={this.state.filter===TODOS_TYPE.SHOW_ALL}
-                       onChange={this.onSelect}/>
-                    all
-               </label>
-                <label>
-                    <input
-                        type="radio"
-                        value={TODOS_TYPE.SHOW_ACTIVE}
-                        checked={this.state.filter===TODOS_TYPE.SHOW_ACTIVE}
-                        onChange={this.onSelect}/>
-                    active
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        value={TODOS_TYPE.SHOW_COMPLETE}
-                        checked={this.state.filter===TODOS_TYPE.SHOW_COMPLETE}
-                        onChange={this.onSelect}/>
-                    completed
-                </label> */}
-                {/* <ul>
-                    {
-                        itemsToShow.map((item) => <li
-                            key={item.id}
-                            onClick={() => this.props.updateTodo({"id":item.id, status:2})}
-                            style={item.status==2 ? {color: 'green'} : null}
-                        >
-                            <span className="name">{item.content}</span>
-                            <span className="state">{item.status==2 ? '已完成' : '未完成'}</span>
-                        </li>)
-                    }
-                </ul> */}
                 <Table columns={this.columns} dataSource={itemsToShow} rowKey="id" width="80%" 
-                    // rowClassName={(record, index) => record.status == 2 ? "completedRow" : "normalRow"} 
                 />
             </div>
         )
