@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "autoprefixer": "^9.7.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "envify": "^4.1.0",
     "qs": "^6.9.1",
     "react": "^16.13.0",
