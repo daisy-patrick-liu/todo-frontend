@@ -37,7 +37,7 @@
     "autoprefixer": "^9.7.4",
     "axios": "^0.19.2",
     "envify": "^4.1.0",
-    "qs": "^6.9.1",
+    "qs": "^6.9.7",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.13.0",
